@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Panth_OrderCleanup::deletion_log"
+             title="Deletion Log"
+             module="Panth_OrderCleanup"
+             parent="Panth_Core::panth_extensions"
+             action="panth_ordercleanup/log/index"
+             resource="Panth_OrderCleanup::view_log"
+             sortOrder="60"/>
+    </menu>
+</config>

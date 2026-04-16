@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <listingToolbar name="listing_top">
+        <massaction name="listing_massaction">
+            <action name="panth_delete_orders">
+                <settings>
+                    <url path="panth_ordercleanup/order/massDelete"/>
+                    <type>panth_delete_orders</type>
+                    <label translate="true">Delete Orders (Permanent)</label>
+                    <confirm>
+                        <title translate="true">Delete Selected Orders</title>
+                        <message translate="true">WARNING: This will permanently delete the selected orders, including all related invoices, shipments, credit memos, and payment data. This action cannot be undone. Are you sure?</message>
+                    </confirm>
+                </settings>
+            </action>
+        </massaction>
+    </listingToolbar>
+</listing>

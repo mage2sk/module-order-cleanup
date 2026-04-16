@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <!-- Register with Panth Core -->
+    <type name="Panth\Core\ViewModel\ThemeConfig">
+        <arguments>
+            <argument name="registeredModules" xsi:type="array">
+                <item name="Panth_OrderCleanup" xsi:type="string">Panth_OrderCleanup</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Deletion Log Grid Collection -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="panth_order_deletion_log_listing_data_source" xsi:type="string">Panth\OrderCleanup\Model\ResourceModel\DeletionLog\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Panth\OrderCleanup\Model\ResourceModel\DeletionLog\Grid\Collection"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">panth_order_deletion_log</argument>
+            <argument name="resourceModel" xsi:type="string">Panth\OrderCleanup\Model\ResourceModel\DeletionLog</argument>
+        </arguments>
+    </virtualType>
+
+</config>

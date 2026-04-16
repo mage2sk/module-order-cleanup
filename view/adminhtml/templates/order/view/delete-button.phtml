@@ -1,0 +1,168 @@
+<?php
+/**
+ * Delete button on Order View page with double-confirmation modal.
+ *
+ * @var \Panth\OrderCleanup\Block\Adminhtml\Order\View\DeleteButton $block
+ */
+
+if (!$block->canShow()) {
+    return;
+}
+
+$deleteUrl = $block->getDeleteUrl();
+$incrementId = $block->escapeHtml($block->getOrderIncrementId());
+$buttonText = $block->escapeHtml($block->getButtonText());
+$buttonColor = $block->escapeHtml($block->getButtonColor());
+$requireConfirm = $block->requireConfirmation();
+$requireTypeId = $block->requireTypeOrderId();
+$formKey = $block->escapeHtml($block->getFormKey());
+?>
+
+<style>
+.panth-oc-delete-btn {
+    background: <?= /* @noEscape */ $buttonColor ?>;
+    color: #fff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    margin-left: 8px;
+    transition: opacity 0.2s;
+}
+.panth-oc-delete-btn:hover { opacity: 0.85; }
+
+/* Confirmation Modal */
+.panth-oc-modal-backdrop {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+    z-index: 10000; display: none; align-items: center; justify-content: center;
+}
+.panth-oc-modal-backdrop.active { display: flex; }
+
+.panth-oc-modal {
+    background: #fff; border-radius: 12px; padding: 32px; max-width: 480px; width: 90%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3); text-align: center;
+}
+.panth-oc-modal h3 { font-size: 20px; font-weight: 700; color: #DC2626; margin: 0 0 12px; }
+.panth-oc-modal p { color: #555; font-size: 14px; line-height: 1.6; margin: 0 0 20px; }
+.panth-oc-modal .panth-oc-warning {
+    background: #FEF2F2; border: 1px solid #FECACA; border-radius: 8px;
+    padding: 16px; margin-bottom: 20px; text-align: left; font-size: 13px; color: #991B1B;
+}
+.panth-oc-modal .panth-oc-warning strong { display: block; margin-bottom: 6px; font-size: 14px; }
+.panth-oc-modal .panth-oc-type-input {
+    width: 100%; padding: 10px 14px; border: 2px solid #E5E7EB; border-radius: 8px;
+    font-size: 14px; text-align: center; margin-bottom: 16px; box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+.panth-oc-modal .panth-oc-type-input:focus { border-color: #DC2626; outline: none; }
+.panth-oc-modal .panth-oc-type-input.valid { border-color: #16A34A; }
+.panth-oc-modal .panth-oc-type-label {
+    font-size: 13px; color: #666; margin-bottom: 8px; display: block;
+}
+.panth-oc-modal .panth-oc-actions { display: flex; gap: 12px; justify-content: center; }
+.panth-oc-modal .panth-oc-cancel {
+    padding: 10px 24px; border: 1px solid #D1D5DB; border-radius: 8px;
+    background: #fff; color: #374151; font-weight: 600; cursor: pointer; font-size: 14px;
+}
+.panth-oc-modal .panth-oc-confirm {
+    padding: 10px 24px; border: none; border-radius: 8px;
+    background: #DC2626; color: #fff; font-weight: 700; cursor: pointer; font-size: 14px;
+    opacity: 0.4; pointer-events: none; transition: opacity 0.2s;
+}
+.panth-oc-modal .panth-oc-confirm.enabled { opacity: 1; pointer-events: auto; }
+.panth-oc-modal .panth-oc-confirm.enabled:hover { background: #B91C1C; }
+</style>
+
+<!-- Delete Button -->
+<button type="button" class="panth-oc-delete-btn" id="panth-oc-delete-trigger">
+    <?= /* @noEscape */ $buttonText ?>
+</button>
+
+<!-- Confirmation Modal -->
+<div class="panth-oc-modal-backdrop" id="panth-oc-modal">
+    <div class="panth-oc-modal">
+        <h3>&#9888; Delete Order #<?= /* @noEscape */ $incrementId ?>?</h3>
+
+        <div class="panth-oc-warning">
+            <strong>This action is permanent and cannot be undone.</strong>
+            The following data will be permanently deleted:
+            <ul style="margin:8px 0 0;padding-left:20px;">
+                <li>Order #<?= /* @noEscape */ $incrementId ?> and all order items</li>
+                <li>Related invoices, shipments, and credit memos</li>
+                <li>Payment transactions and order history</li>
+                <li>Associated quote data</li>
+            </ul>
+        </div>
+
+        <?php if ($requireTypeId): ?>
+            <label class="panth-oc-type-label">
+                Type <strong><?= /* @noEscape */ $incrementId ?></strong> to confirm deletion:
+            </label>
+            <input type="text" class="panth-oc-type-input" id="panth-oc-type-input"
+                   placeholder="Type order number here" autocomplete="off">
+        <?php endif; ?>
+
+        <div class="panth-oc-actions">
+            <button type="button" class="panth-oc-cancel" id="panth-oc-cancel">Cancel</button>
+            <form method="post" action="<?= $block->escapeUrl($deleteUrl) ?>" id="panth-oc-form" style="display:inline;">
+                <input type="hidden" name="form_key" value="<?= /* @noEscape */ $formKey ?>">
+                <input type="hidden" name="order_id" value="<?= (int) $block->getOrder()->getEntityId() ?>">
+                <button type="submit" class="panth-oc-confirm <?= !$requireTypeId ? 'enabled' : '' ?>" id="panth-oc-confirm">
+                    Yes, Permanently Delete
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var trigger = document.getElementById('panth-oc-delete-trigger');
+    var modal = document.getElementById('panth-oc-modal');
+    var cancelBtn = document.getElementById('panth-oc-cancel');
+    var confirmBtn = document.getElementById('panth-oc-confirm');
+    var typeInput = document.getElementById('panth-oc-type-input');
+    var expectedId = '<?= $block->escapeJs($incrementId) ?>';
+    var requireType = <?= $requireTypeId ? 'true' : 'false' ?>;
+    var requireConfirm = <?= $requireConfirm ? 'true' : 'false' ?>;
+
+    trigger.addEventListener('click', function() {
+        if (!requireConfirm) {
+            if (confirm('Are you sure you want to delete order #' + expectedId + '? This cannot be undone.')) {
+                document.getElementById('panth-oc-form').submit();
+            }
+            return;
+        }
+        modal.classList.add('active');
+        if (typeInput) typeInput.focus();
+    });
+
+    cancelBtn.addEventListener('click', function() {
+        modal.classList.remove('active');
+        if (typeInput) { typeInput.value = ''; confirmBtn.classList.remove('enabled'); }
+    });
+
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.classList.remove('active');
+            if (typeInput) { typeInput.value = ''; confirmBtn.classList.remove('enabled'); }
+        }
+    });
+
+    if (typeInput) {
+        typeInput.addEventListener('input', function() {
+            var match = this.value.trim() === expectedId;
+            confirmBtn.classList.toggle('enabled', match);
+            this.classList.toggle('valid', match);
+        });
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            modal.classList.remove('active');
+        }
+    });
+});
+</script>

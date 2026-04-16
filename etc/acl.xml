@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Magento_Backend::stores">
+                    <resource id="Magento_Backend::stores_settings">
+                        <resource id="Magento_Config::config">
+                            <resource id="Panth_OrderCleanup::config" title="Panth Order Cleanup Config" sortOrder="175"/>
+                        </resource>
+                    </resource>
+                </resource>
+                <resource id="Magento_Sales::sales">
+                    <resource id="Panth_OrderCleanup::delete_order" title="Delete Orders" sortOrder="100"/>
+                    <resource id="Panth_OrderCleanup::mass_delete" title="Mass Delete Orders" sortOrder="110"/>
+                    <resource id="Panth_OrderCleanup::view_log" title="View Deletion Log" sortOrder="120"/>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

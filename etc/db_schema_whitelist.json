@@ -1,0 +1,31 @@
+{
+    "panth_order_deletion_log": {
+        "column": {
+            "log_id": true,
+            "order_increment_id": true,
+            "order_entity_id": true,
+            "customer_name": true,
+            "customer_email": true,
+            "grand_total": true,
+            "order_currency": true,
+            "order_status": true,
+            "items_count": true,
+            "items_summary": true,
+            "invoices_deleted": true,
+            "shipments_deleted": true,
+            "creditmemos_deleted": true,
+            "deleted_by": true,
+            "ip_address": true,
+            "deletion_method": true,
+            "deleted_at": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        },
+        "index": {
+            "PANTH_ORDER_DELETION_LOG_ORDER_INCREMENT_ID": true,
+            "PANTH_ORDER_DELETION_LOG_DELETED_BY": true,
+            "PANTH_ORDER_DELETION_LOG_DELETED_AT": true
+        }
+    }
+}
