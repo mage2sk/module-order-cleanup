@@ -27,9 +27,15 @@ class DeleteButton extends Template
 
     public function canShow(): bool
     {
-        return $this->scopeConfig->isSetFlag(self::CFG . 'general/enabled')
+        return $this->getOrder() !== null
+            && $this->scopeConfig->isSetFlag(self::CFG . 'general/enabled')
             && $this->scopeConfig->isSetFlag(self::CFG . 'button/show_on_order_view')
             && $this->authorization->isAllowed('Panth_OrderCleanup::delete_order');
+    }
+
+    public function getOrder()
+    {
+        return $this->registry->registry('current_order');
     }
 
     public function getDeleteUrl(): string
@@ -62,10 +68,5 @@ class DeleteButton extends Template
     public function requireTypeOrderId(): bool
     {
         return $this->scopeConfig->isSetFlag(self::CFG . 'safety/require_type_order_id');
-    }
-
-    private function getOrder()
-    {
-        return $this->registry->registry('current_order');
     }
 }

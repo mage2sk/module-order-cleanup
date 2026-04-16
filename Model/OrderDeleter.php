@@ -109,11 +109,20 @@ class OrderDeleter
             // Delete related quote if exists
             $quoteId = $order->getQuoteId();
             if ($quoteId) {
-                $conn->delete($this->resource->getTableName('quote'), ['entity_id = ?' => $quoteId]);
+                // Delete shipping rates via quote_address (quote_shipping_rate uses address_id, not quote_id)
+                $addressIds = $conn->fetchCol(
+                    $conn->select()
+                        ->from($this->resource->getTableName('quote_address'), ['address_id'])
+                        ->where('quote_id = ?', $quoteId)
+                );
+                if (!empty($addressIds)) {
+                    $conn->delete($this->resource->getTableName('quote_shipping_rate'), ['address_id IN (?)' => $addressIds]);
+                }
+
                 $conn->delete($this->resource->getTableName('quote_item'), ['quote_id = ?' => $quoteId]);
                 $conn->delete($this->resource->getTableName('quote_address'), ['quote_id = ?' => $quoteId]);
                 $conn->delete($this->resource->getTableName('quote_payment'), ['quote_id = ?' => $quoteId]);
-                $conn->delete($this->resource->getTableName('quote_shipping_rate'), ['quote_id = ?' => $quoteId]);
+                $conn->delete($this->resource->getTableName('quote'), ['entity_id = ?' => $quoteId]);
             }
 
             $conn->commit();
