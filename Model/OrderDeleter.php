@@ -34,13 +34,13 @@ class OrderDeleter
     public function deleteOrder(int $orderId, string $method = 'single'): array
     {
         if (!$this->scopeConfig->isSetFlag(self::CFG . 'general/enabled')) {
-            return ['success' => false, 'message' => 'Order Cleanup is disabled.'];
+            return ['success' => false, 'message' => 'Order Cleanup is currently disabled. Please enable it under Stores > Configuration > Panth Extensions > Order Cleanup.'];
         }
 
         try {
             $order = $this->orderRepository->get($orderId);
         } catch (\Exception $e) {
-            return ['success' => false, 'message' => 'Order not found.'];
+            return ['success' => false, 'message' => 'The requested order could not be found. It may have already been deleted.'];
         }
 
         $incrementId = $order->getIncrementId();
@@ -53,7 +53,7 @@ class OrderDeleter
             if (!in_array($status, $allowed, true)) {
                 return [
                     'success' => false,
-                    'message' => "Order #{$incrementId} has status '{$status}' which is not allowed for deletion. Allowed: " . implode(', ', $allowed),
+                    'message' => "Order #{$incrementId} cannot be deleted because its current status is \"{$status}\". Only orders with the following statuses can be deleted: " . implode(', ', $allowed) . '.',
                 ];
             }
         }
@@ -142,7 +142,7 @@ class OrderDeleter
         } catch (\Exception $e) {
             $conn->rollBack();
             $this->logger->error('Panth_OrderCleanup: Failed to delete order #' . $incrementId . ': ' . $e->getMessage());
-            return ['success' => false, 'message' => 'Failed to delete order: ' . $e->getMessage()];
+            return ['success' => false, 'message' => "Something went wrong while deleting order #{$incrementId}. The operation has been rolled back and no data was lost. Please check the system log for details."];
         }
     }
 

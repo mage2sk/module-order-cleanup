@@ -24,7 +24,7 @@ class Delete extends Action implements HttpPostActionInterface
         $orderId = (int) $this->getRequest()->getParam('order_id');
 
         if (!$orderId) {
-            $this->messageManager->addErrorMessage(__('No order ID specified.'));
+            $this->messageManager->addErrorMessage(__('Unable to process the request. No order was specified.'));
             return $this->_redirect('sales/order/index');
         }
 

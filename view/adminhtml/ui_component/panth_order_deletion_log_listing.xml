@@ -14,6 +14,9 @@
     </settings>
     <dataSource name="panth_order_deletion_log_listing_data_source" component="Magento_Ui/js/grid/provider">
         <settings>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">log_id</param>
+            </storageConfig>
             <updateUrl path="mui/index/render"/>
         </settings>
         <aclResource>Panth_OrderCleanup::view_log</aclResource>

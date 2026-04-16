@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace Panth\OrderCleanup\Block\Adminhtml\Order\View;
 
+use Magento\Backend\Block\Template;
 use Magento\Backend\Block\Widget\Context;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\AuthorizationInterface;
 use Magento\Framework\Registry;
-use Magento\Framework\View\Element\Template;
 
 class DeleteButton extends Template
 {

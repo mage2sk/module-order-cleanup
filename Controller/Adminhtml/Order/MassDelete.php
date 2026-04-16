@@ -28,14 +28,14 @@ class MassDelete extends Action implements HttpPostActionInterface
     public function execute()
     {
         if (!$this->scopeConfig->isSetFlag('panth_order_cleanup/mass_action/enabled')) {
-            $this->messageManager->addErrorMessage(__('Mass delete is disabled in configuration.'));
+            $this->messageManager->addErrorMessage(__('Mass order deletion is currently disabled. You can enable it under Stores > Configuration > Panth Extensions > Order Cleanup > Mass Action.'));
             return $this->_redirect('sales/order/index');
         }
 
         try {
             $collection = $this->filter->getCollection($this->collectionFactory->create());
         } catch (\Exception $e) {
-            $this->messageManager->addErrorMessage(__('Could not load orders: %1', $e->getMessage()));
+            $this->messageManager->addErrorMessage(__('Unable to load the selected orders. Please try again.'));
             return $this->_redirect('sales/order/index');
         }
 
@@ -44,7 +44,7 @@ class MassDelete extends Action implements HttpPostActionInterface
 
         if ($totalSelected > $maxPerAction) {
             $this->messageManager->addErrorMessage(
-                __('You selected %1 orders but the maximum per action is %2. Please select fewer orders.', $totalSelected, $maxPerAction)
+                __('Safety limit exceeded: You selected %1 orders, but only %2 orders can be deleted at a time. Please reduce your selection and try again.', $totalSelected, $maxPerAction)
             );
             return $this->_redirect('sales/order/index');
         }
@@ -65,13 +65,17 @@ class MassDelete extends Action implements HttpPostActionInterface
 
         if ($deleted > 0) {
             $this->messageManager->addSuccessMessage(
-                __('%1 order(s) have been permanently deleted.', $deleted)
+                $deleted === 1
+                    ? __('1 order has been permanently deleted.')
+                    : __('%1 orders have been permanently deleted.', $deleted)
             );
         }
 
         if ($failed > 0) {
             $this->messageManager->addErrorMessage(
-                __('%1 order(s) could not be deleted. %2', $failed, implode(' | ', array_unique($errors)))
+                $failed === 1
+                    ? __('1 order could not be deleted: %1', implode(' ', array_unique($errors)))
+                    : __('%1 orders could not be deleted: %2', $failed, implode(' | ', array_unique($errors)))
             );
         }
 

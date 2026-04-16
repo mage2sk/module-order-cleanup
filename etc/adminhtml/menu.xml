@@ -2,12 +2,25 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
     <menu>
+        <add id="Panth_OrderCleanup::group"
+             title="Order Cleanup"
+             module="Panth_OrderCleanup"
+             sortOrder="55"
+             parent="Panth_Core::panth_extensions"
+             resource="Panth_OrderCleanup::view_log"/>
         <add id="Panth_OrderCleanup::deletion_log"
              title="Deletion Log"
              module="Panth_OrderCleanup"
-             parent="Panth_Core::panth_extensions"
+             sortOrder="10"
+             parent="Panth_OrderCleanup::group"
              action="panth_ordercleanup/log/index"
-             resource="Panth_OrderCleanup::view_log"
-             sortOrder="60"/>
+             resource="Panth_OrderCleanup::view_log"/>
+        <add id="Panth_OrderCleanup::settings"
+             title="Configuration"
+             module="Panth_OrderCleanup"
+             sortOrder="99"
+             parent="Panth_OrderCleanup::group"
+             action="adminhtml/system_config/edit/section/panth_order_cleanup"
+             resource="Panth_OrderCleanup::config"/>
     </menu>
 </config>

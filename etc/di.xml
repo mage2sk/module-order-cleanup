@@ -20,12 +20,5 @@
         </arguments>
     </type>
 
-    <virtualType name="Panth\OrderCleanup\Model\ResourceModel\DeletionLog\Grid\Collection"
-                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
-        <arguments>
-            <argument name="mainTable" xsi:type="string">panth_order_deletion_log</argument>
-            <argument name="resourceModel" xsi:type="string">Panth\OrderCleanup\Model\ResourceModel\DeletionLog</argument>
-        </arguments>
-    </virtualType>
 
 </config>
