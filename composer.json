@@ -2,7 +2,7 @@
     "name": "mage2kishan/module-order-cleanup",
     "description": "Panth Order Cleanup — safely delete test orders, invoices, shipments, and credit memos from Magento 2 with double verification, deletion logs, and admin-configurable safety controls. Keeps your order data clean and organized.",
     "type": "magento2-module",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "license": "proprietary",
     "keywords": [
         "magento2",
