@@ -24,13 +24,6 @@ class OrderDeleter
     ) {
     }
 
-    /**
-     * Delete a single order and its related data.
-     *
-     * @param int $orderId
-     * @param string $method 'single' or 'mass'
-     * @return array{success: bool, message: string, increment_id?: string}
-     */
     public function deleteOrder(int $orderId, string $method = 'single'): array
     {
         if (!$this->scopeConfig->isSetFlag(self::CFG . 'general/enabled')) {
@@ -46,7 +39,6 @@ class OrderDeleter
         $incrementId = $order->getIncrementId();
         $status = $order->getStatus();
 
-        // Check allowed statuses
         $allowedStatuses = $this->scopeConfig->getValue(self::CFG . 'safety/allowed_statuses');
         if (!empty($allowedStatuses)) {
             $allowed = array_map('trim', explode(',', $allowedStatuses));
@@ -58,14 +50,12 @@ class OrderDeleter
             }
         }
 
-        // Log before deletion (capture order data)
         $logData = $this->captureOrderData($order, $method);
 
         $conn = $this->resource->getConnection();
         $conn->beginTransaction();
 
         try {
-            // Delete related data based on config
             if ($this->scopeConfig->isSetFlag(self::CFG . 'safety/delete_invoices')) {
                 $this->deleteRelated($conn, 'sales_invoice', 'sales_invoice_grid', 'sales_invoice_item', 'sales_invoice_comment', $orderId);
                 $logData['invoices_deleted'] = true;
@@ -85,31 +75,22 @@ class OrderDeleter
                 $conn->delete($this->resource->getTableName('sales_payment_transaction'), ['order_id = ?' => $orderId]);
             }
 
-            // Delete order items
             $conn->delete($this->resource->getTableName('sales_order_item'), ['order_id = ?' => $orderId]);
 
-            // Delete order payment
             $conn->delete($this->resource->getTableName('sales_order_payment'), ['parent_id = ?' => $orderId]);
 
-            // Delete order status history
             $conn->delete($this->resource->getTableName('sales_order_status_history'), ['parent_id = ?' => $orderId]);
 
-            // Delete order addresses
             $conn->delete($this->resource->getTableName('sales_order_address'), ['parent_id = ?' => $orderId]);
 
-            // Delete order tax
             $conn->delete($this->resource->getTableName('sales_order_tax'), ['order_id = ?' => $orderId]);
 
-            // Delete from order grid
             $conn->delete($this->resource->getTableName('sales_order_grid'), ['entity_id = ?' => $orderId]);
 
-            // Delete the order itself
             $conn->delete($this->resource->getTableName('sales_order'), ['entity_id = ?' => $orderId]);
 
-            // Delete related quote if exists
             $quoteId = $order->getQuoteId();
             if ($quoteId) {
-                // Delete shipping rates via quote_address (quote_shipping_rate uses address_id, not quote_id)
                 $addressIds = $conn->fetchCol(
                     $conn->select()
                         ->from($this->resource->getTableName('quote_address'), ['address_id'])
@@ -127,7 +108,6 @@ class OrderDeleter
 
             $conn->commit();
 
-            // Save deletion log
             if ($this->scopeConfig->isSetFlag(self::CFG . 'safety/keep_deletion_log')) {
                 $this->saveDeletionLog($logData);
             }
@@ -148,7 +128,6 @@ class OrderDeleter
 
     private function deleteRelated($conn, string $mainTable, string $gridTable, string $itemTable, string $commentTable, int $orderId): void
     {
-        // Get entity IDs from main table
         $entityIds = $conn->fetchCol(
             $conn->select()->from($this->resource->getTableName($mainTable), ['entity_id'])->where('order_id = ?', $orderId)
         );
