@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="panth_order_deletion_log" resource="default" engine="innodb" comment="Order Deletion Audit Log">
+        <column xsi:type="int" name="log_id" unsigned="true" nullable="false" identity="true" comment="Log ID"/>
+        <column xsi:type="varchar" name="order_increment_id" nullable="false" length="50" comment="Deleted Order Increment ID"/>
+        <column xsi:type="int" name="order_entity_id" unsigned="true" nullable="false" comment="Deleted Order Entity ID"/>
+        <column xsi:type="varchar" name="customer_name" nullable="true" length="255" comment="Customer Name"/>
+        <column xsi:type="varchar" name="customer_email" nullable="true" length="255" comment="Customer Email"/>
+        <column xsi:type="decimal" name="grand_total" scale="4" precision="20" nullable="true" comment="Order Grand Total"/>
+        <column xsi:type="varchar" name="order_currency" nullable="true" length="10" comment="Order Currency Code"/>
+        <column xsi:type="varchar" name="order_status" nullable="true" length="50" comment="Order Status at Deletion"/>
+        <column xsi:type="int" name="items_count" unsigned="true" nullable="true" comment="Number of Items"/>
+        <column xsi:type="text" name="items_summary" nullable="true" comment="JSON summary of deleted items"/>
+        <column xsi:type="boolean" name="invoices_deleted" nullable="false" default="false" comment="Were invoices deleted"/>
+        <column xsi:type="boolean" name="shipments_deleted" nullable="false" default="false" comment="Were shipments deleted"/>
+        <column xsi:type="boolean" name="creditmemos_deleted" nullable="false" default="false" comment="Were credit memos deleted"/>
+        <column xsi:type="varchar" name="deleted_by" nullable="false" length="255" comment="Admin user who deleted"/>
+        <column xsi:type="varchar" name="ip_address" nullable="true" length="45" comment="IP address of admin"/>
+        <column xsi:type="varchar" name="deletion_method" nullable="false" length="20" default="single" comment="single or mass"/>
+        <column xsi:type="timestamp" name="deleted_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Deletion Timestamp"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="log_id"/>
+        </constraint>
+        <index referenceId="PANTH_ORDER_DELETION_LOG_ORDER_INCREMENT_ID" indexType="btree">
+            <column name="order_increment_id"/>
+        </index>
+        <index referenceId="PANTH_ORDER_DELETION_LOG_DELETED_BY" indexType="btree">
+            <column name="deleted_by"/>
+        </index>
+        <index referenceId="PANTH_ORDER_DELETION_LOG_DELETED_AT" indexType="btree">
+            <column name="deleted_at"/>
+        </index>
+    </table>
+</schema>

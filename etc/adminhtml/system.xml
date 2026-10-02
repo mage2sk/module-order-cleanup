@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="panth_order_cleanup" translate="label" sortOrder="175"
+                 showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Order Cleanup</label>
+            <tab>panth</tab>
+            <resource>Panth_OrderCleanup::config</resource>
+
+            <group id="general" translate="label" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>General</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable Order Cleanup</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Master toggle for order deletion features.</comment>
+                </field>
+            </group>
+
+            <group id="button" translate="label" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Delete Button on Order View</label>
+                <field id="show_on_order_view" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Show Delete Button on Order View</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Add a "Delete This Order" button to the order detail page.</comment>
+                </field>
+                <field id="button_text" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Button Text</label>
+                    <comment>Custom text for the delete button. Default: "Delete This Order"</comment>
+                    <depends><field id="show_on_order_view">1</field></depends>
+                </field>
+                <field id="button_color" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Button Color</label>
+                    <comment>Hex color for the delete button. Default: #DC2626 (red)</comment>
+                    <depends><field id="show_on_order_view">1</field></depends>
+                </field>
+            </group>
+
+            <group id="safety" translate="label comment" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Safety &amp; Data Controls</label>
+                <comment>Configure what data gets deleted and safety verification requirements.</comment>
+                <field id="require_confirmation" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Require Confirmation Modal</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Show a confirmation popup before deleting any order.</comment>
+                </field>
+                <field id="require_type_order_id" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Require Typing Order ID to Confirm</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>User must type the order increment ID to confirm deletion (like GitHub repo delete). Maximum safety.</comment>
+                </field>
+                <field id="delete_invoices" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Delete Related Invoices</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="delete_shipments" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Delete Related Shipments</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="delete_creditmemos" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Delete Related Credit Memos</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="delete_transactions" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Delete Related Payment Transactions</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="keep_deletion_log" translate="label comment" type="select" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Keep Deletion Log</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Log every deletion with order details, admin user, timestamp, and IP address for audit trail.</comment>
+                </field>
+                <field id="allowed_statuses" translate="label comment" type="multiselect" sortOrder="80" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Allowed Order Statuses for Deletion</label>
+                    <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
+                    <comment>Only orders with these statuses can be deleted. Leave empty to allow all statuses.</comment>
+                </field>
+            </group>
+
+            <group id="mass_action" translate="label" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Mass Delete</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable Mass Delete Action</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Add "Delete Orders" to the mass action dropdown in the order grid.</comment>
+                </field>
+                <field id="require_confirmation" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Require Confirmation for Mass Delete</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Show confirmation dialog before mass deleting orders.</comment>
+                </field>
+                <field id="max_orders_per_action" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Maximum Orders Per Mass Action</label>
+                    <validate>validate-digits</validate>
+                    <comment>Safety limit on how many orders can be deleted in a single mass action. Default: 50</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

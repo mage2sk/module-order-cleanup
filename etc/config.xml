@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <panth_order_cleanup>
+            <general>
+                <enabled>1</enabled>
+            </general>
+            <button>
+                <show_on_order_view>1</show_on_order_view>
+                <button_text>Delete This Order</button_text>
+                <button_color>#DC2626</button_color>
+            </button>
+            <safety>
+                <require_confirmation>1</require_confirmation>
+                <require_type_order_id>1</require_type_order_id>
+                <delete_invoices>1</delete_invoices>
+                <delete_shipments>1</delete_shipments>
+                <delete_creditmemos>1</delete_creditmemos>
+                <delete_transactions>1</delete_transactions>
+                <keep_deletion_log>1</keep_deletion_log>
+                <allowed_statuses>canceled,closed,holded,pending,fraud</allowed_statuses>
+            </safety>
+            <mass_action>
+                <enabled>1</enabled>
+                <require_confirmation>1</require_confirmation>
+                <max_orders_per_action>50</max_orders_per_action>
+            </mass_action>
+        </panth_order_cleanup>
+    </default>
+</config>
