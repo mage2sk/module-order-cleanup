@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <!-- Register with Panth Core -->
+    <type name="Panth\Core\ViewModel\ThemeConfig">
+        <arguments>
+            <argument name="registeredModules" xsi:type="array">
+                <item name="Panth_OrderCleanup" xsi:type="string">Panth_OrderCleanup</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Deletion Log Grid Collection -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="panth_order_deletion_log_listing_data_source" xsi:type="string">Panth\OrderCleanup\Model\ResourceModel\DeletionLog\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Panth\OrderCleanup\Ui\DeletionLogGridFulltextFilter" type="Panth\OrderCleanup\Ui\Component\Listing\LikeFulltextFilter">
+        <arguments>
+            <argument name="columns" xsi:type="array">
+                <item name="order_increment_id" xsi:type="string">main_table.order_increment_id</item>
+                <item name="customer_name" xsi:type="string">main_table.customer_name</item>
+                <item name="customer_email" xsi:type="string">main_table.customer_email</item>
+                <item name="deleted_by" xsi:type="string">main_table.deleted_by</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Panth\OrderCleanup\Ui\DeletionLogGridFilterPool" type="Magento\Framework\View\Element\UiComponent\DataProvider\FilterPool">
+        <arguments>
+            <argument name="appliers" xsi:type="array">
+                <item name="regular" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\RegularFilter</item>
+                <item name="fulltext" xsi:type="object">Panth\OrderCleanup\Ui\DeletionLogGridFulltextFilter</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Panth\OrderCleanup\Ui\DeletionLogGridReporting" type="Magento\Framework\View\Element\UiComponent\DataProvider\Reporting">
+        <arguments>
+            <argument name="filterPool" xsi:type="object">Panth\OrderCleanup\Ui\DeletionLogGridFilterPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Panth\OrderCleanup\Ui\DeletionLogGridDataProvider" type="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider">
+        <arguments>
+            <argument name="reporting" xsi:type="object">Panth\OrderCleanup\Ui\DeletionLogGridReporting</argument>
+        </arguments>
+    </virtualType>
+</config>
