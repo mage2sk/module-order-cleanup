@@ -197,7 +197,7 @@ These steps do not drop the `panth_order_deletion_log` table and do not remove t
 
 ## License
 
-Proprietary, as declared in `composer.json`. The package is published on Packagist and can be installed with Composer; see the product page for the terms of use.
+Free and open source under the MIT License. See [LICENSE.txt](LICENSE.txt).
 
 ## Changelog
 
